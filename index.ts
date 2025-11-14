@@ -34,16 +34,18 @@ program
             }
 
             console.log(`Found ${notifications.length} notifications:\n`);
+
+            //todo: add progress bar here
             console.log ('Now scanning for closed PRs and Issues...\n');
 
             const canBeDeleted = [];
             for (const note of notifications) {
-                let statusLabel = '';
+                // let statusLabel = '';
                 if (note.subject?.type === 'PullRequest' && note.subject.url) {
                     try {
                         const { data: pr } = await octokit.request(note.subject.url);
                         if (pr.state === 'closed') {
-                            statusLabel = ' [CLOSED PR] <-- can be deleted!';
+                            // statusLabel = ' [CLOSED PR] <-- can be deleted!';
                             canBeDeleted.push(note);
                         }
                     } catch (prError) {
@@ -54,7 +56,7 @@ program
                     try {
                         const { data: issue } = await octokit.request(note.subject.url);
                         if (issue.state === 'closed') {
-                            statusLabel = ' [CLOSED ISSUE] <-- can be deleted';
+                            // statusLabel = ' [CLOSED ISSUE] <-- can be deleted';
                             canBeDeleted.push(note);
                         }
                     } catch (issueError) {
@@ -63,12 +65,13 @@ program
                     }
                 }
 
-                // console.log(`- ${note.subject.title}${statusLabel}`);
             }
 
             console.log("\nSummary:");
             console.log(`Total notifications: ${notifications.length}`);
             console.log(`Can be deleted (closed PRs/Issues): ${canBeDeleted.length}`);
+
+            //todo: add a confirmation
 
             for (const note of canBeDeleted) {
                 try {
