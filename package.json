@@ -16,7 +16,10 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cleaner": "node --env-file=.env index.ts"
+    "cleaner": "node --env-file=.env index.ts",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "commander": "^14.0.2",
@@ -24,6 +27,14 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1"
+    "@eslint/js": "^9.39.1",
+    "@eslint/json": "^0.14.0",
+    "@eslint/markdown": "^7.5.1",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "3.6.2",
+    "typescript-eslint": "^8.48.0"
   }
 }
