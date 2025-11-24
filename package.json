@@ -16,7 +16,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cleaner": "node --env-file=.env index.ts",
+    "cleaner": "node --env-file=.env bin/run.ts",
     "lint": "eslint .",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write ."
