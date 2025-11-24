@@ -1,6 +1,6 @@
 export type TCanBeDeletedItem = {
-    id: string;
-    subject?: {
-        title: string;
-    };
+  id: string;
+  subject?: {
+    title: string;
+  };
 };

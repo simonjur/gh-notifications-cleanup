@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { Octokit } from "octokit";
 import process from "node:process";
 import prompts from "prompts";
-import {cleanupNotifications, listNotifications} from "./notifications.ts";
+import { cleanupNotifications, listNotifications } from "./notifications.ts";
 
 const program = new Command();
 program
