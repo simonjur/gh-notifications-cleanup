@@ -8,7 +8,7 @@ those on closed pull requests or issues as read.
 
 ## Status
 
-[![Lint & Format](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml.yml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml.yml)
+[![Lint And Format Check](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml) [![CodeQL](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql)
 
 ## Packages
 
