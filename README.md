@@ -8,7 +8,21 @@ those on closed pull requests or issues as read.
 
 ## Status
 
-[![Lint And Format Check](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml) [![CodeQL](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Lint And Format Check](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml) 
+[![CodeQL](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+
+## Code quality
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=bugs)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
 
 ## Packages
 
