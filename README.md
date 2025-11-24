@@ -8,8 +8,8 @@ those on closed pull requests or issues as read.
 
 ## Status
 
-[![Lint And Format Check](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml) 
-[![CodeQL](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql) 
+[![Lint And Format Check](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/ci.yaml)
+[![CodeQL](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/simonjur/gh-notifications-cleanup/actions/workflows/github-code-scanning/codeql)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=simonjur_gh-notifications-cleanup&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=simonjur_gh-notifications-cleanup)
 
 ## Code quality
