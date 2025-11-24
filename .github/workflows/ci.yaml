@@ -1,4 +1,4 @@
-name: ci.yaml
+name: Lint And Format Check
 on:
   push:
     branches:
