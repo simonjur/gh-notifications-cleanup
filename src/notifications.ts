@@ -1,25 +1,33 @@
 import { Octokit } from "octokit";
 import type { TCanBeDeletedItem } from "./types.ts";
+import PQueue from "p-queue";
+
+async function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
+    try {
+        await octokit.request("DELETE /notifications/threads/{thread_id}", {
+            thread_id: item.id,
+        });
+        console.log(`Marking ${item.subject?.title ?? item.id} as DONE`);
+    } catch (unsubscribeError) {
+        const message =
+            unsubscribeError instanceof Error
+                ? unsubscribeError.message
+                : String(unsubscribeError);
+        console.warn(
+            `[ERROR] Failed to unsubscribe from notification ${item.id}: ${message}`,
+        );
+    }
+}
 
 export async function cleanupNotifications(
   octokit: Octokit,
   canBeDeleted: TCanBeDeletedItem[],
 ) {
+  const queue = new PQueue({ concurrency: 20 });
+
   for (const note of canBeDeleted) {
-    try {
-      await octokit.request("DELETE /notifications/threads/{thread_id}", {
-        thread_id: note.id,
-      });
-      console.log(`Marking ${note.subject?.title ?? note.id} as DONE`);
-    } catch (unsubscribeError) {
-      const message =
-        unsubscribeError instanceof Error
-          ? unsubscribeError.message
-          : String(unsubscribeError);
-      console.warn(
-        `[ERROR] Failed to unsubscribe from notification ${note.id}: ${message}`,
-      );
-    }
+    queue.add(async () => cleanupNotification(octokit, note));
+    await queue.onIdle();
   }
 }
 
