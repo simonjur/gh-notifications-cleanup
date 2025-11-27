@@ -1,6 +1,7 @@
 import { Octokit } from "octokit";
 import type { TCanBeDeletedItem } from "./types.ts";
 import PQueue from "p-queue";
+import yoctoSpinner from "yocto-spinner";
 
 async function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
     try {
@@ -46,7 +47,7 @@ export async function listNotifications(octokit: Octokit, since?: string) {
   console.log(`Found ${notifications.length} notifications:\n`);
 
   //todo: add progress bar here
-  console.log("Now scanning for closed PRs and Issues...\n");
+  const spinner = yoctoSpinner({text: 'Now scanning for closed PRs and Issues…'}).start();
 
   const canBeDeleted = [];
   for (const note of notifications) {
@@ -78,5 +79,6 @@ export async function listNotifications(octokit: Octokit, since?: string) {
       }
     }
   }
+  spinner.success('Done scanning.');
   return canBeDeleted;
 }
