@@ -24,7 +24,7 @@ export async function cleanupNotifications(
   octokit: Octokit,
   canBeDeleted: TCanBeDeletedItem[],
 ) {
-  const queue = new PQueue({ concurrency: 20 });
+  const queue = new PQueue({ concurrency: 10 });
 
   for (const note of canBeDeleted) {
     queue.add(async () => cleanupNotification(octokit, note));
@@ -46,7 +46,6 @@ export async function listNotifications(octokit: Octokit, since?: string) {
 
   console.log(`Found ${notifications.length} notifications:\n`);
 
-  //todo: add progress bar here
   const spinner = yoctoSpinner({text: 'Now scanning for closed PRs and Issues…'}).start();
 
   const canBeDeleted = [];
