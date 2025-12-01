@@ -38,7 +38,9 @@ program
         `Found ${canBeDeleted.length} closed PR/Issue notification(s) that can be cleaned up:`,
       );
       for (const note of canBeDeleted) {
-        console.log(`- ${note.subject?.title ?? note.id} (${note.reasonToDelete})`);
+        console.log(
+          `- ${note.subject?.title ?? note.id} (${note.reasonToDelete})`,
+        );
       }
     } catch (error) {
       console.error(`Failed to read notifications: ${error.message}`);

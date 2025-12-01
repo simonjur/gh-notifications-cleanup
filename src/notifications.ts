@@ -3,21 +3,23 @@ import type { TCanBeDeletedItem } from "./types.ts";
 import PQueue from "p-queue";
 import yoctoSpinner from "yocto-spinner";
 
-async function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
-    try {
-        await octokit.request("DELETE /notifications/threads/{thread_id}", {
-            thread_id: item.id,
-        });
-        console.log(`Marking ${item.subject?.title ?? item.id} as DONE`);
-    } catch (unsubscribeError) {
-        const message =
-            unsubscribeError instanceof Error
-                ? unsubscribeError.message
-                : String(unsubscribeError);
-        console.warn(
-            `[ERROR] Failed to mark notification ${item.id} as done: ${message}`,
-        );
-    }
+function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
+  return octokit
+    .request("DELETE /notifications/threads/{thread_id}", {
+      thread_id: item.id,
+    })
+    .then(() => {
+      console.log(`Marking ${item.subject?.title ?? item.id} as DONE`);
+    })
+    .catch((unsubscribeError: unknown) => {
+      const message =
+        unsubscribeError instanceof Error
+          ? unsubscribeError.message
+          : String(unsubscribeError);
+      console.warn(
+        `[ERROR] Failed to mark notification ${item.id} as done: ${message}`,
+      );
+    });
 }
 
 export async function cleanupNotifications(
@@ -45,15 +47,23 @@ export async function listNotifications(octokit: Octokit, since?: string) {
 
   console.log(`Found ${notifications.length} notifications:\n`);
 
-  const spinner = yoctoSpinner({text: 'Now scanning for closed PRs and Issues…'}).start();
+  const spinner = yoctoSpinner({
+    text: "Now scanning for closed PRs and Issues…",
+  }).start();
 
   const canBeDeleted: TCanBeDeletedItem[] = [];
   for (const notification of notifications) {
-    if (notification.subject?.type === "PullRequest" && notification.subject.url) {
+    if (
+      notification.subject?.type === "PullRequest" &&
+      notification.subject.url
+    ) {
       try {
         const { data: pr } = await octokit.request(notification.subject.url);
         if (pr.state === "closed") {
-          canBeDeleted.push({...notification, reasonToDelete: 'Pull Request is closed' });
+          canBeDeleted.push({
+            ...notification,
+            reasonToDelete: "Pull Request is closed",
+          });
         }
       } catch (prError) {
         const message =
@@ -62,11 +72,17 @@ export async function listNotifications(octokit: Octokit, since?: string) {
           `[ERROR] Failed to load pull request for notification ${notification.id}: ${message}`,
         );
       }
-    } else if (notification.subject?.type === "Issue" && notification.subject.url) {
+    } else if (
+      notification.subject?.type === "Issue" &&
+      notification.subject.url
+    ) {
       try {
         const { data: issue } = await octokit.request(notification.subject.url);
         if (issue.state === "closed") {
-          canBeDeleted.push({...notification, reasonToDelete: 'Issue is closed' } );
+          canBeDeleted.push({
+            ...notification,
+            reasonToDelete: "Issue is closed",
+          });
         }
       } catch (issueError) {
         const message =
@@ -77,6 +93,6 @@ export async function listNotifications(octokit: Octokit, since?: string) {
       }
     }
   }
-  spinner.success('Done scanning.');
+  spinner.success("Done scanning.");
   return canBeDeleted;
 }
