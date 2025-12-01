@@ -3,4 +3,5 @@ export type TCanBeDeletedItem = {
   subject?: {
     title: string;
   };
+  reasonToDelete?: string;
 };

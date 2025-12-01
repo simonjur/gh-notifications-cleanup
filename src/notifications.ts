@@ -15,7 +15,7 @@ async function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
                 ? unsubscribeError.message
                 : String(unsubscribeError);
         console.warn(
-            `[ERROR] Failed to unsubscribe from notification ${item.id}: ${message}`,
+            `[ERROR] Failed to mark notification ${item.id} as done: ${message}`,
         );
     }
 }
@@ -36,7 +36,6 @@ export async function listNotifications(octokit: Octokit, since?: string) {
   const notifications = await octokit.paginate("GET /notifications", {
     since,
     per_page: 100,
-    page: 1,
   });
 
   if (notifications.length === 0) {
@@ -48,32 +47,32 @@ export async function listNotifications(octokit: Octokit, since?: string) {
 
   const spinner = yoctoSpinner({text: 'Now scanning for closed PRs and Issues…'}).start();
 
-  const canBeDeleted = [];
-  for (const note of notifications) {
-    if (note.subject?.type === "PullRequest" && note.subject.url) {
+  const canBeDeleted: TCanBeDeletedItem[] = [];
+  for (const notification of notifications) {
+    if (notification.subject?.type === "PullRequest" && notification.subject.url) {
       try {
-        const { data: pr } = await octokit.request(note.subject.url);
+        const { data: pr } = await octokit.request(notification.subject.url);
         if (pr.state === "closed") {
-          canBeDeleted.push(note);
+          canBeDeleted.push({...notification, reasonToDelete: 'Pull Request is closed' });
         }
       } catch (prError) {
         const message =
           prError instanceof Error ? prError.message : String(prError);
         console.warn(
-          `[ERROR] Failed to load pull request for notification ${note.id}: ${message}`,
+          `[ERROR] Failed to load pull request for notification ${notification.id}: ${message}`,
         );
       }
-    } else if (note.subject?.type === "Issue" && note.subject.url) {
+    } else if (notification.subject?.type === "Issue" && notification.subject.url) {
       try {
-        const { data: issue } = await octokit.request(note.subject.url);
+        const { data: issue } = await octokit.request(notification.subject.url);
         if (issue.state === "closed") {
-          canBeDeleted.push(note);
+          canBeDeleted.push({...notification, reasonToDelete: 'Issue is closed' } );
         }
       } catch (issueError) {
         const message =
           issueError instanceof Error ? issueError.message : String(issueError);
         console.warn(
-          `[ERROR] Failed to load issue for notification ${note.id}: ${message}`,
+          `[ERROR] Failed to load issue for notification ${notification.id}: ${message}`,
         );
       }
     }
