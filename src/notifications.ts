@@ -3,7 +3,10 @@ import type { TCanBeDeletedItem } from "./types.ts";
 import PQueue from "p-queue";
 import yoctoSpinner from "yocto-spinner";
 
-function cleanupNotification(octokit: Octokit, item: TCanBeDeletedItem) {
+function cleanupNotification(
+  octokit: Octokit,
+  item: TCanBeDeletedItem,
+): Promise<void> {
   return octokit
     .request("DELETE /notifications/threads/{thread_id}", {
       thread_id: item.id,
@@ -30,8 +33,9 @@ export async function cleanupNotifications(
 
   for (const note of canBeDeleted) {
     queue.add(async () => cleanupNotification(octokit, note));
-    await queue.onIdle();
   }
+
+  await queue.onIdle();
 }
 
 export async function listNotifications(octokit: Octokit, since?: string) {
