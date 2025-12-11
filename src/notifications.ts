@@ -15,10 +15,7 @@ function cleanupNotification(
       console.log(`Marking ${item.subject?.title ?? item.id} as DONE`);
     })
     .catch((unsubscribeError: unknown) => {
-      const message =
-        unsubscribeError instanceof Error
-          ? unsubscribeError.message
-          : String(unsubscribeError);
+      const message = (unsubscribeError as Error).message;
       console.warn(
         `[ERROR] Failed to mark notification ${item.id} as done: ${message}`,
       );
@@ -32,17 +29,73 @@ export async function cleanupNotifications(
   const queue = new PQueue({ concurrency: 10 });
 
   for (const note of canBeDeleted) {
-    queue.add(async () => cleanupNotification(octokit, note));
+    queue.add(() => cleanupNotification(octokit, note));
   }
 
   await queue.onIdle();
 }
 
+async function markPullRequestNotification(
+  octokit: Octokit,
+  notification: TNotification,
+  canBeDeleted: TCanBeDeletedItem[],
+) {
+  try {
+    const { data: pr } = await octokit.request(notification.subject.url);
+    if (pr.state === "closed") {
+      canBeDeleted.push({
+        ...notification,
+        reasonToDelete: "Pull Request is closed",
+      });
+    }
+  } catch (prError) {
+    const message =
+      prError instanceof Error ? prError.message : String(prError);
+    console.warn(
+      `[ERROR] Failed to load pull request for notification ${notification.id}: ${message}`,
+    );
+  }
+}
+
+async function markIssueNotification(
+  octokit: Octokit,
+  notification: TNotification,
+  canBeDeleted: TCanBeDeletedItem[],
+) {
+  try {
+    const { data: issue } = await octokit.request(notification.subject.url);
+    if (issue.state === "closed") {
+      canBeDeleted.push({
+        ...notification,
+        reasonToDelete: "Issue is closed",
+      });
+    }
+  } catch (issueError) {
+    const message =
+      issueError instanceof Error ? issueError.message : String(issueError);
+    console.warn(
+      `[ERROR] Failed to load issue for notification ${notification.id}: ${message}`,
+    );
+  }
+}
+
+type TNotification = {
+  id: string;
+  subject?: {
+    title: string;
+    type: string;
+    url: string;
+  };
+};
+
 export async function listNotifications(octokit: Octokit, since?: string) {
-  const notifications = await octokit.paginate("GET /notifications", {
-    since,
-    per_page: 100,
-  });
+  const notifications: TNotification[] = await octokit.paginate(
+    "GET /notifications",
+    {
+      since,
+      per_page: 100,
+    },
+  );
 
   if (notifications.length === 0) {
     console.log("No notifications found.");
@@ -61,40 +114,12 @@ export async function listNotifications(octokit: Octokit, since?: string) {
       notification.subject?.type === "PullRequest" &&
       notification.subject.url
     ) {
-      try {
-        const { data: pr } = await octokit.request(notification.subject.url);
-        if (pr.state === "closed") {
-          canBeDeleted.push({
-            ...notification,
-            reasonToDelete: "Pull Request is closed",
-          });
-        }
-      } catch (prError) {
-        const message =
-          prError instanceof Error ? prError.message : String(prError);
-        console.warn(
-          `[ERROR] Failed to load pull request for notification ${notification.id}: ${message}`,
-        );
-      }
+      await markPullRequestNotification(octokit, notification, canBeDeleted);
     } else if (
       notification.subject?.type === "Issue" &&
       notification.subject.url
     ) {
-      try {
-        const { data: issue } = await octokit.request(notification.subject.url);
-        if (issue.state === "closed") {
-          canBeDeleted.push({
-            ...notification,
-            reasonToDelete: "Issue is closed",
-          });
-        }
-      } catch (issueError) {
-        const message =
-          issueError instanceof Error ? issueError.message : String(issueError);
-        console.warn(
-          `[ERROR] Failed to load issue for notification ${notification.id}: ${message}`,
-        );
-      }
+      await markIssueNotification(octokit, notification, canBeDeleted);
     }
   }
   spinner.success("Done scanning.");
